@@ -1,0 +1,10 @@
+Jupyter notebook and supporting code for analysing a simple chemical reaction system using Stan.
+
+Dependencies:
+- numpy
+- pandas
+- jupyter
+- scipy
+- pystan
+- arviz
+- matplotlib
