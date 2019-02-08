@@ -8,3 +8,5 @@ Dependencies:
 - pystan
 - arviz
 - matplotlib
+
+Run the notebook with binder! https://mybinder.org/v2/gh/teddygroves/stan_ode_example/master
