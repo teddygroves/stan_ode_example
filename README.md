@@ -9,4 +9,6 @@ Dependencies:
 - arviz
 - matplotlib
 
-Run the notebook with binder! https://mybinder.org/v2/gh/teddygroves/stan_ode_example/master
+Run the notebook with binder!
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/teddygroves/stan_ode_example/master)
