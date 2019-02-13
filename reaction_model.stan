@@ -1,5 +1,5 @@
 functions {
-#include ode_function.stan
+#include functions.stan
 }
 data {
   int<lower=1> N_metabolite;
