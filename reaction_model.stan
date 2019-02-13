@@ -16,6 +16,9 @@ data {
   vector<lower=0>[3] enzyme_parameter_sd;
   real K_I_mean;
   real K_I_sd;
+  real rel_tol;
+  real f_tol;
+  int max_steps;
 }
 parameters {
   real<lower=0> k_cat[4];
@@ -28,14 +31,12 @@ transformed parameters {
   for (e in 1:N_experiment){
     real theta[13] = append_array(append_array(append_array(k_cat, K_eq), K_m), {K_I});
     int x_i[0];
-    final_metabolite_concentration_hat[e] =
-      tail(integrate_ode_rk45(reaction_ode,
-                              initial_metabolite_concentration,
-                              t_0,
-                              {t_steady},
-                              theta,
-                              controlled_concentration[e],
-                              x_i), 1)[1];
+    final_metabolite_concentration_hat[e] = to_array_1d(algebra_solver(reaction_steady_state_system,
+                                                                       rep_vector(0.1, 4),
+                                                                       to_vector(theta),
+                                                                       controlled_concentration[e],
+                                                                       x_i,
+                                                                       rel_tol, f_tol, max_steps));
   }
 }
 model {
