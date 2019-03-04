@@ -1,4 +1,4 @@
-real[] flux_equations(vector X, vector theta, real[] x_r){
+real[] flux_equations_big_k(vector X, vector theta, real[] x_r){
   real E[4] = x_r[1:4];
   real S = x_r[5];
   real P = x_r[6];
@@ -14,8 +14,8 @@ real[] flux_equations(vector X, vector theta, real[] x_r){
   fluxes[4] = E[4] * k_cat[4] * (X[3] - P / K_eq[4]) * inv(X[3] + K_m[4] + P    / K_eq[4]);
   return fluxes;
 }
-vector reaction_steady_state_system(vector y, vector theta, real[] x_r, int[] x_i){
-  real flux[4] = flux_equations(y, theta, x_r);
+vector steady_state_equations_big_k(vector y, vector theta, real[] x_r, int[] x_i){
+  real flux[4] = flux_equations_big_k(y, theta, x_r);
   vector[3] roots;
 
   roots[1] = flux[1] - flux[2];

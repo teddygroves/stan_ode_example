@@ -1,5 +1,5 @@
 functions {
-#include functions.stan
+#include big_k_equations.stan
 }
 data {
   // experimental data
@@ -34,13 +34,13 @@ transformed parameters {
   for (e in 1:N_experiment){
     vector[13] theta = append_row(append_row(append_row(k_cat, K_eq), K_m), K_I);
     int x_i[0];
-    metabolite_hat[e] = algebra_solver(reaction_steady_state_system, // equation system 
+    metabolite_hat[e] = algebra_solver(steady_state_equations_big_k, // equation system 
                                        rep_vector(0.1, 3),           // initial guess
                                        theta,                        // parameters
                                        controlled_concentration[e],  // real-valued data
                                        x_i,                          // integer-valued data
                                        rel_tol, f_tol, max_steps)';  // control parameters
-    flux_hat[e] = flux_equations(metabolite_hat[e]', theta, controlled_concentration[e]);
+    flux_hat[e] = flux_equations_big_k(metabolite_hat[e]', theta, controlled_concentration[e]);
   }
 }
 model {
