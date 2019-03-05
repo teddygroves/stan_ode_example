@@ -1,1 +1,3 @@
 *.ipynb_checkpoints*
+.DS_store
+cached_stan_models/*.pkl
