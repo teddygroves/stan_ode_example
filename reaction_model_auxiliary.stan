@@ -34,9 +34,8 @@ transformed data {
 parameters {
   simplex[N_enzyme_state_uni_uni] enzyme_abundance_uni_uni[3];
   simplex[N_enzyme_state_uni_uni_inhib] enzyme_abundance_uni_uni_inhib;
-  simplex[N_elementary_reaction_uni_uni] reversibility_uni_uni[3];
-  simplex[N_elementary_reaction_uni_uni_inhib] reversibility_uni_uni_inhib;
-  vector<upper=-1>[4] gibbs;
+  simplex[N_elementary_reaction_uni_uni] reversibility[4];
+  vector<upper=0>[4] gibbs;
   vector<lower=0>[N_experiment] reaction_flux;
   real<lower=0,upper=1> inhibition_modifier;
 }
@@ -46,20 +45,20 @@ transformed parameters {
     int x_i[0];
     vector[26] k;
     k[1:6] = get_small_k_uni_uni(enzyme_abundance_uni_uni[1],
-                                 reversibility_uni_uni[1],
+                                 reversibility[1],
                                  gibbs[1],
                                  reaction_flux[e]);
     k[7:14] = get_small_k_uni_uni_inhib(enzyme_abundance_uni_uni_inhib,
-                                        reversibility_uni_uni_inhib,
+                                        reversibility[2],
                                         gibbs[2],
                                         reaction_flux[e],
                                         inhibition_modifier);
     k[15:20] = get_small_k_uni_uni(enzyme_abundance_uni_uni[2],
-                                   reversibility_uni_uni[2],
+                                   reversibility[3],
                                    gibbs[3],
                                    reaction_flux[e]);
     k[21:26] = get_small_k_uni_uni(enzyme_abundance_uni_uni[3],
-                                   reversibility_uni_uni[3],
+                                   reversibility[4],
                                    gibbs[4],
                                    reaction_flux[e]);
     metabolite_hat[e] = algebra_solver(steady_state_equations_small_k,
@@ -76,19 +75,15 @@ model {
   inhibition_modifier ~ beta(inhibition_modifier_beta_params[1], inhibition_modifier_beta_params[2]);
   for (r in 1:3){
     enzyme_abundance_uni_uni[r] ~ dirichlet(rep_vector(dir_enz, N_enzyme_state_uni_uni));
-    reversibility_uni_uni[r] ~ dirichlet(rep_vector(dir_rev, N_elementary_reaction_uni_uni));
+    reversibility[r] ~ dirichlet(rep_vector(dir_rev, N_elementary_reaction_uni_uni));
   }
   enzyme_abundance_uni_uni_inhib ~ dirichlet(rep_vector(dir_enz, N_enzyme_state_uni_uni_inhib));
-  reversibility_uni_uni_inhib ~ dirichlet(rep_vector(dir_rev, N_elementary_reaction_uni_uni_inhib));
+  reaction_flux ~ normal(measured_flux, sigma_flux);
   // measurement model
   if (LIKELIHOOD == 1){
-    reaction_flux ~ normal(measured_flux, sigma_flux);
     for (e in 1:N_experiment){
       measured_metabolite[e] ~ normal(metabolite_hat[e], sigma_metabolite);
     }
-  }
-  else {
-    reaction_flux ~ normal(0.1, 0.03);
   }
 }
 generated quantities {

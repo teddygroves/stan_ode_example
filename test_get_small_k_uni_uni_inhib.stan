@@ -3,7 +3,7 @@ functions{
 }
 data {
   vector[4] enzyme_abundance_raw;
-  vector[4] reversibility_proportional;
+  vector[3] reversibility_proportional;
   real gibbs;
   real reaction_flux;
   real elementary_flux_modifier;
