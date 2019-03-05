@@ -1,5 +1,4 @@
 real[] flux_equations_small_k(vector X, vector small_k, real[] controlled_concentrations){
-  /* NB indexes here need correcting!!! */
   real S = controlled_concentrations[5];
   real P = controlled_concentrations[6];
   real E[4] = controlled_concentrations[1:4];
